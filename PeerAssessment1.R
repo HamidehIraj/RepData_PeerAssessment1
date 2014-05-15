@@ -1,8 +1,9 @@
 # A.Loading and preprocessing the data
 
 setwd("~/GitHub/RepData_PeerAssessment1")
-
 data <- read.csv("activity.csv")
+
+library(lattice) #used for xyplot
 
   #exploring data
 names(data)
@@ -26,7 +27,12 @@ summary(refined.data$steps)
 
 sum.data           <- aggregate(steps ~ date , data=refined.data, FUN=sum)
 names(sum.data)    <- c("date","sum.steps")
-plot(sum.steps ~ date, data=sum.data,type="l")
+
+#Figure 1
+
+xyplot(sum.data $sum.steps ~ sum.data $date , 
+       layout = c(1,1),type="h",xlab="Date",ylab="Total Number of Steps") 
+
 
 mean.data          <- aggregate(steps ~ date , data=refined.data, FUN=mean)
 names(mean.data)   <- c("date","mean.steps")
@@ -42,8 +48,7 @@ head(median.data)
 meaninterval.data        <- aggregate(steps ~ interval , data=data, FUN=mean)
 names(meaninterval.data) <- c("interval", "mean.steps")
 
-library(lattice)
-
+#Figure 2
 xyplot(meaninterval.data $mean.steps ~ meaninterval.data $interval , 
        layout = c(1,1),type="l",xlab="Interval",ylab="Number of Steps") 
 
@@ -115,11 +120,13 @@ nrow(NA.mergedintervaldata) # 0 rows OK - All NULL values are filled up
 
 newsum.data           <- aggregate(steps ~ date , data=mergedinterval.data, FUN=sum)
 names(newsum.data)    <- c("date","newsum.steps")
-par(mfrow = c(2, 1))
-plot(steps ~ date)
+# par(mfrow = c(2, 1))
+# plot(sum.data)
+# plot(newsum.data)
 
-plot.ts(sum.data)
-plot.ts(newsum.data)
+#Figure 3
+xyplot(newsum.data $newsum.steps ~ newsum.data $date 
+       ,type="h",xlab="Date",ylab="Total Number of Steps") 
 
 newmean.data          <- aggregate(steps ~ date , data=mergedinterval.data, FUN=mean)
 names(newmean.data)   <- c("date","newmean.steps")
@@ -151,7 +158,7 @@ ifelse(  as.POSIXlt(refined.data[i, ]$date)$wday %in% c("5","6"),
   # converting to factor
 refined.data$daytype <- as.factor(refined.data$daytype)
 #----------------------------------------------------------------
-library(lattice)
+# Figure 4
 xyplot(refined.data$steps ~ refined.data$interval | refined.data$daytype, 
        layout = c(1,2),type="l",xlab="Interval",ylab="Number of Steps") 
 
